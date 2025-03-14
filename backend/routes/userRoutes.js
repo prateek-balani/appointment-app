@@ -7,6 +7,17 @@ const bcrypt = require("bcrypt");
 const router = express.Router();
 const secret_key = process.env.SECRET_KEY;
 
+// list all records
+router.get("/", async (req, res) => {
+  try {
+    const results = await req.db.all("SELECT * FROM user");
+    res.status(200).send(results);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error fetching users");
+  }
+});
+
 // register a new user
 
 router.post("/register", async (req, res) => {

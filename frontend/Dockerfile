@@ -1,7 +1,7 @@
 FROM node:18.9.1
 
 # Set the working directory
-WORKDIR /app
+WORKDIR /frontend
 
 # Copy the file from your host to your current location
 COPY package.json .

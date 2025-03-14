@@ -2,7 +2,7 @@
 FROM node:18.9.1
 
 # Set working directory
-WORKDIR /app
+WORKDIR /backend
 
 # Copy package.json and package-lock.json
 COPY package*.json ./
@@ -17,7 +17,7 @@ RUN npm install --build-from-source --force
 COPY . .
 
 # Create a directory for SQLite database files
-RUN mkdir -p /app/data
+RUN mkdir -p /backend/data
 
 # Expose the application port
 EXPOSE 5050
