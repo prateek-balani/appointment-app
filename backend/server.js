@@ -10,8 +10,19 @@ dotenv.config(); // load env
 const app = express();
 const PORT = process.env.PORT || 5050;
 
+app.use(
+  cors({
+    origin: "http://localhost:3000", // Allow frontend to make requests
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+  })
+);
 
-
+// Middleware to parse JSON bodies
+app.use(express.json());
+// Middleware to parse URL-encoded bodies (for forms)
+app.use(express.urlencoded({ extended: true }));
 
 // running the server
 const initializeServer = async () => {

@@ -5,8 +5,12 @@ const Landing = () => {
     return (
         <div>
             <h1>Appointment Booking app</h1>
-            <button to='/login'>Login</button>
-            <button to='/register'>Register</button>
+            <Link to="/login">
+                <button>Login</button>
+            </Link>
+            <Link to="/register">
+                <button>Register</button>
+            </Link>
         </div>
     );
 }

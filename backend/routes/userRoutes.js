@@ -27,7 +27,7 @@ router.post("/register", async (req, res) => {
 
         const query = "INSERT INTO user (firstName, lastName, email, password, role) VALUES (?, ?, ?, ?, ?)";
         const values = [fname, lname, email, hashedPassword, role];
-        db.run(query, values, function(err) {
+        req.db.run(query, values, function(err) {
             if (err) {
                 console.error("Error inserting user:", err);
                 res.status(400).json({error: err.message});
@@ -49,7 +49,7 @@ router.post("/register", async (req, res) => {
 router.post("/login", async (req, res) => {
     const {email, pass} = req.body;
 
-    db.get("SELECT * FROM user WHERE email = ?", [email], async (err, user) => {
+    req.db.get("SELECT * FROM user WHERE email = ?", [email], async (err, user) => {
         if(err || !user) {
             console.error("Error logging in user:", err);
             res.status(401).json({error: err.message});
