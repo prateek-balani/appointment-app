@@ -1,11 +1,11 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
-const db = require("../db/connection.js");
 const bcrypt = require("bcrypt");
-
 
 const router = express.Router();
 const secret_key = process.env.SECRET_KEY;
+
+
 
 // list all records
 router.get("/", async (req, res) => {
@@ -21,48 +21,62 @@ router.get("/", async (req, res) => {
 // register a new user
 
 router.post("/register", async (req, res) => {
-    try {
-        const {fname,lname,email,pass, role} = req.body;
-        const hashedPassword = await bcrypt.hash(pass, 10); 
+  console.log("Register route hit...");  // 1
+  try {
+    console.log("req.body =", req.body);  // 2
 
-        const query = "INSERT INTO user (firstName, lastName, email, password, role) VALUES (?, ?, ?, ?, ?)";
-        const values = [fname, lname, email, hashedPassword, role];
-        req.db.run(query, values, function(err) {
-            if (err) {
-                console.error("Error inserting user:", err);
-                res.status(400).json({error: err.message});
-            } else {
-                res.status(201).send("User created successfully");
-                res.json({ id: this.lastID, fname, lname, email });
-            }
-        });
-    }
-    catch(e){
-        console.error("Error registering user:", e);
-        res.status(500).json({error: e.message});
+    const { fname, lname, email, pass, role } = req.body;
+    console.log(`fname=${fname}, lname=${lname}, pass=${pass}, role=${role}`); // 3
 
-    }
+    // 4
+    console.log("Hashing password...");
+    const hashedPassword = await bcrypt.hash(pass, 10);
+    console.log("Password hashed:", hashedPassword); 
+
+    // 5
+    console.log("Inserting user...");
+    const query = "INSERT INTO user (firstName, lastName, email, password, role) VALUES (?, ?, ?, ?, ?)";
+    const values = [fname, lname, email, hashedPassword, role];
+
+    const { lastID } = await req.db.run(query, values);
+    console.log("User inserted with ID:", lastID);
+    return res.status(201).json({
+      id: lastID,
+      fname,
+      lname,
+      email,
+      message: "User created successfully"
+    });
+  } catch (e) {
+    console.error("Error registering user:", e);
+    return res.status(500).json({ error: e.message });
+  }
 });
 
 // login a user
 
 router.post("/login", async (req, res) => {
-    const {email, pass} = req.body;
-
-    req.db.get("SELECT * FROM user WHERE email = ?", [email], async (err, user) => {
-        if(err || !user) {
-            console.error("Error logging in user:", err);
-            res.status(401).json({error: err.message});
+    const { email, password } = req.body;
+    try {
+        const user = await req.db.get("SELECT * FROM user WHERE email = ?", [email]);
+        if (!user) {
+            return res.status(401).json({ error: "Invalid credentials" });
         }
-
-        const pmatch = await bcrypt.compare(pass, user.password);
-        if(pmatch) {
-            const token = jwt.sign({id: user.id}, secret_key, {expiresIn: '1h'});
-            res.json({token: token});
+        const pmatch = await bcrypt.compare(password, user.password);
+        if (pmatch) {
+            const token = jwt.sign(
+              { id: user.id, role: user.role },
+              secret_key,
+              { expiresIn: '1h' }
+            );
+            return res.json({ token });
         } else {
-            res.status(401).json({error: "Invalid credentials"});
+            return res.status(401).json({ error: "Invalid credentials" });
         }
-    });
+    } catch (err) {
+        console.error("Error logging in user:", err);
+        return res.status(401).json({ error: err.message });
+    }
 });
 
 module.exports = router;
