@@ -3,6 +3,7 @@ const cors = require("cors");
 const dotenv = require('dotenv');
 const connectToDatabase = require("./db/connection.js");
 const userRoutes = require("./routes/userRoutes.js");
+const appointmentRoutes = require("./routes/appointmentRoutes.js");
 
 dotenv.config(); // load env
 
@@ -28,6 +29,7 @@ const initializeServer = async () => {
 
     // Routes
     app.use("/users", userRoutes); // User routes
+    app.use("/appointments", appointmentRoutes); // Appointment routes
 
 
 

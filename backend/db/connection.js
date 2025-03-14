@@ -24,7 +24,7 @@ const connectToDatabase = async () => {
         lastName TEXT NOT NULL,
         email TEXT UNIQUE NOT NULL,
         password TEXT NOT NULL,
-        role TEXT NOT NULL DEFAULT 'user' CHECK(role IN ('user', 'staff', 'admin'))
+        role TEXT NOT NULL DEFAULT 'applicant' CHECK(role IN ('applicant', 'staff', 'admin'))
       );
     `);
 
@@ -41,10 +41,20 @@ const connectToDatabase = async () => {
       );
     `);
 
-        // Insert initial data into the admins table
+        // Insert sample data into the user table
         await db.run(
             `INSERT INTO user (firstName, lastName,email,password,role) VALUES (?, ?, ?, ?, ?)`,
-            ["John", "Doe", "john@doe.com", "password", "admin"]
+            ["John", "Doe", "john@doe.com", "password", "staff"]
+        );
+        await db.run(
+            `INSERT INTO user (firstName, lastName,email,password,role) VALUES (?, ?, ?, ?, ?)`,
+            ["Jane", "Doe", "jane@doe.com", "password", "applicant"]
+        );
+
+        // Insert sample data into the appointments table
+        await db.run(
+            `INSERT INTO appointments (createdById, assignedToId, dateTime, details) VALUES (?, ?, ?, ?)`,
+            [2, 1, "2025-03-14 10:00:00", "Meeting with John Doe"]
         );
 
         console.log("Connected to SQLite database successfully at:", dbPath);
