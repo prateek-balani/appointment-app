@@ -14,18 +14,26 @@ const Register = () => {
 
     const registerUser = async (e) => {
         e.preventDefault();
-        const data = { fname, lname, email, pass, role };
+      
         try {
             const response = await fetch("http://localhost:5050/users/register", { // hardcoding it to backend register route 
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data),
+                body: JSON.stringify({ fname, lname, email, pass, role }),
             });
+
+            
             if (response.ok) {
                 const user = await response.json();
                 console.log(user);
+
+
                 alert("User registered successfully");
+                console.log("Navigating to login...");
                 navigate("/login");
+            } else {
+                const errorMsg = await response.text();
+                console.error("Registration failed:", errorMsg);
             }
         } catch (e) {
             console.log(e.message);
@@ -38,7 +46,12 @@ const Register = () => {
                 <input placeholder="First Name" value={fname} onChange={(e) => setFname(e.target.value)} />
                 <input placeholder="Last Name" value={lname} onChange={(e) => setLname(e.target.value)} />
                 <input placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-                <input placeholder="Password" value={pass} onChange={(e) => setPass(e.target.value)} />
+                <input
+                  type="password"
+                  placeholder="Password"
+                  value={pass}
+                  onChange={(e) => setPass(e.target.value)}
+                />
                 <select placeholder="Role" value={role} onChange={(e) => setRole(e.target.value)}>
                     <option value="admin">Admin</option>
                     <option value="applicant">applicant</option>

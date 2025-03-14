@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 const connectToDatabase = require("./db/connection.js");
 const userRoutes = require("./routes/userRoutes.js");
 const appointmentRoutes = require("./routes/appointmentRoutes.js");
+const bodyParser = require("body-parser");
 
 dotenv.config(); // load env
 
@@ -23,6 +24,7 @@ app.use(
 app.use(express.json());
 // Middleware to parse URL-encoded bodies (for forms)
 app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 // running the server
 const initializeServer = async () => {
