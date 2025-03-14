@@ -1,7 +1,8 @@
-import express from "express";
-import jwt from "jsonwebtoken";
-import db from "../db/db.js";
-import bcrypt from "bcrypt";
+const express = require("express");
+const jwt = require("jsonwebtoken");
+const db = require("../db/connection.js");
+const bcrypt = require("bcrypt");
+
 
 const router = express.Router();
 const secret_key = process.env.SECRET_KEY;

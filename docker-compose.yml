@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+#backend
+  backend:
+    build: ./backend
+    ports:
+      - "5050:5050"
+    environment:
+      - NODE_ENV=development
+      - DB_PATH=/data/db.sqlite
+    volumes:
+      - ./backend:/backend
+      - /backend/node_modules
+      - sqlite_data:/data
+    
+#frontend
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+# sqlite db
+
+volumes:
+  sqlite_data:  

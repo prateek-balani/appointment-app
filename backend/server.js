@@ -1,20 +1,34 @@
-import express from "express";
-import cors from "cors";
-import dotenv from 'dotenv';
-import db from './db.js';
+const express = require("express");
+const cors = require("cors");
+const dotenv = require('dotenv');
+const connectToDatabase = require("./db/connection.js");
+const userRoutes = require("./routes/userRoutes.js");
 
 dotenv.config(); // load env
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5050;
+
+
+
 
 // running the server
 const initializeServer = async () => {
   try {
     // ensure tables are created 
     console.log("Checking database connection...");
-    await db.get("SELECT 1"); // Simple query to verify the database is working
+    const db = await connectToDatabase(); // Simple query to verify the database is working
     console.log("Database connection verified!");
+
+    // Middleware to inject the database into requests
+    app.use((req, res, next) => {
+      req.db = db; // Attach the database connection to requests
+      next();
+    });
+
+    // Routes
+    app.use("/users", userRoutes); // User routes
+
 
 
     // start the server
@@ -26,3 +40,5 @@ const initializeServer = async () => {
   }
 };
 
+
+initializeServer();
