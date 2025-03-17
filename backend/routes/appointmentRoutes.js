@@ -3,6 +3,8 @@ const db = require("../db/connection.js");
 
 
 const router = express.Router();
+const verifyToken = require("../middleware/authentication");
+
 
 // list all records for the day
 router.get("/", async (req, res) => {
@@ -17,7 +19,7 @@ router.get("/", async (req, res) => {
 
 // get appointments by id
 
-router.get("/:id", async (req, res) => {
+router.get("/:id",verifyToken, async (req, res) => {
   try {
      const appointmentId = req.params.id;
     const results = await req.db.all("SELECT * FROM appointments WHERE id = ?", appointmentId);
