@@ -1,7 +1,4 @@
-
-import { TextEncoder, TextDecoder } from 'util';
-
-import "@testing-library/jest-dom"; // Extends jest with DOM-related assertions
+const { TextEncoder, TextDecoder } = require('util');
 
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
