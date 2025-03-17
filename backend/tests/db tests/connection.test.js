@@ -1,6 +1,6 @@
 
 
-const connectToDatabase = require("../db/connection.js");
+const connectToDatabase = require("../../db/connection.js");
 
 describe("Connecting to SQLite db", () => {
     let db;
