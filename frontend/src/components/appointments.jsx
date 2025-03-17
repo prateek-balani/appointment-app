@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 
 const Appointments = () => {
     const [appointments, setAppointments] = useState([]);
+
     useEffect(() => {
         const getAppointments = async () => {
             try {
@@ -21,6 +22,7 @@ const Appointments = () => {
         };
         getAppointments();
     }, []);
+    
     if (appointments.length === 0) {
     return <p>No appointments found.</p>;
   }
