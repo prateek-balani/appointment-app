@@ -42,7 +42,7 @@ const Register = () => {
         }
     }
     return (
-        <section class="flex flex-col items-center justify-center h-screen bg-black">
+        <section class="flex flex-col items-center justify-center h-screen bg-gray-700">
             <div class="w-full max-w-md p-8 space-y-5 bg-black rounded-lg shadow-lg dark:bg-gray-800">
                 <h1 class="text-2xl font-semibold text-center text-gray-900 dark:text-white">Welcome to the Registration Page</h1>
 
