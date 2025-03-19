@@ -1,5 +1,6 @@
 import React from "react";
 import { useEffect, useState } from "react";
+const isProduction = process.env.NODE_ENV === "production";
 
 
 
@@ -10,7 +11,7 @@ const Appointments = () => {
     useEffect(() => {
         const getAppointments = async () => {
             try {
-                fetch("http://localhost:5050/appointments")
+                fetch(isProduction ? "/api/appointments":"http://localhost:5050/api/appointments")
                     .then((res) => res.json())
                     .then((data) => {
                         setAppointments(data);

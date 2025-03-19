@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-
+const isProduction = process.env.NODE_ENV === "production";
 
 
 const Login = () => {
@@ -13,7 +13,7 @@ const Login = () => {
         e.preventDefault();
         
         try {
-            const response = await fetch("http://localhost:5050/users/login", {
+            const response = await fetch(isProduction ? "/api/users/login":"http://localhost:5050/api/users/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({email, password}),

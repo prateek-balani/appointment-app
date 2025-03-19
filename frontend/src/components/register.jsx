@@ -1,6 +1,8 @@
 import React from 'react';
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+const isProduction = process.env.NODE_ENV === "production";
+
 
 
 const Register = () => {
@@ -16,7 +18,7 @@ const Register = () => {
         e.preventDefault();
       
         try {
-            const response = await fetch("http://localhost:5050/users/register", { // hardcoding it to backend register route 
+            const response = await fetch(isProduction?"/api/users/register" :"http://localhost:5050/api/users/register", { // hardcoding it to backend register route 
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ fname, lname, email, pass, role }),

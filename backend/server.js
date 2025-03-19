@@ -48,8 +48,8 @@ const initializeServer = async () => {
     });
 
     // Routes
-    app.use("/users", userRoutes); // User routes
-    app.use("/appointments", appointmentRoutes); // Appointment routes
+    app.use("/api/users", userRoutes); // User routes
+    app.use("/api/appointments", appointmentRoutes); // Appointment routes
 
 
 
