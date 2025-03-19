@@ -24,3 +24,5 @@ yarn-error.log*
 
 backend/data/db.sqlite
 /backend/data/db.sqlite
+
+.vscode
