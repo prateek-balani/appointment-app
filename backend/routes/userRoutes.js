@@ -5,6 +5,7 @@ require("dotenv").config();
 
 const router = express.Router();
 const secret_key = process.env.SECRET_KEY;
+const verifyToken = require("../middleware/authentication.js");
 
 
 
@@ -91,5 +92,22 @@ router.post("/login", async (req, res) => {
         return res.status(401).json({ error: err.message });
     }
 });
+
+// updating a role for a user
+router.put("/:id", verifyToken, async (req, res) => {
+    try {
+        const userId = req.params.id;
+        const { role } = req.body;
+        const query = "UPDATE user SET role = ? WHERE id = ?";
+        const values = [role, userId];
+
+        await req.db.run(query, values);
+        res.status(200).send("User role updated");
+    } catch (e) {
+        console.error("Error updating user role:", e);
+        res.status(500).json({ error: e.message });
+    }
+}
+);
 
 module.exports = router;

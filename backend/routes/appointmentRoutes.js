@@ -57,15 +57,11 @@ router.put("/:id",verifyToken, async (req, res) => {
         const values = [createdById, assignedToId, dateTime, details, appointmentId];
 
 
-        db.run(query, values, function(e) {
-        if (err) {
-            console.error("error updating appointment:", e);
-            res.status(400).json({error: e.message});
-        } else {
-            res.status(200).send("appointment updated");
-        }
-        });
-    } catch (e) {
+         const { lastID } = await req.db.run(query, values);
+        res.status(200).send(`appointment updated with id: ${lastID}`);
+    }
+       
+     catch (e) {
         console.error("error updating appointment:", e);
         res.status(500).json({error: e.message});
     }
