@@ -57,7 +57,7 @@ router.put("/:id",verifyToken, async (req, res) => {
         const values = [createdById, assignedToId, dateTime, details, appointmentId];
 
 
-         const { lastID } = await req.db.run(query, values);
+        const { lastID } = await req.db.run(query, values);
         res.status(200).send(`appointment updated with id: ${lastID}`);
     }
        
@@ -73,15 +73,12 @@ router.delete("/:id",verifyToken, async (req, res) => {
     try{
         const appointmentId = req.params.id;
         const query = "DELETE FROM appointments WHERE id = ?";
-        db.run(query, appointmentId, function(err) {
-            if (err) {
-                console.error("error deleting appointment:", err);
-                res.status(400).json({error: err.message});
-            } else {
-                res.status(200).send("appointment deleted");
-            }
-        });
-    }
+        const values = [appointmentId];
+        
+        const { lastID } = await req.db.run(query, values);
+        res.status(200).send(`appointment updated with id: ${lastID}`);
+        }
+    
     catch(e) {
         console.error("error deleting appointment:", e);
         res.status(500).json({error: e.message});
