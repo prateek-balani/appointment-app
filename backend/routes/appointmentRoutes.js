@@ -3,11 +3,12 @@ const db = require("../db/connection.js");
 
 
 const router = express.Router();
-const verifyToken = require("../middleware/authentication");
+const verifyToken = require("../middleware/authentication.js");
+
 
 
 // list all records for the day
-router.get("/", async (req, res) => {
+router.get("/", verifyToken, async (req, res) => {
   try {
     const results = await req.db.all("SELECT * FROM appointments WHERE date(dateTime) = date('now')");
     res.status(200).send(results);
@@ -32,7 +33,7 @@ router.get("/:id",verifyToken, async (req, res) => {
 
 // update an appointment
 
-router.put("/:id", async (req, res) => {
+router.put("/:id",verifyToken, async (req, res) => {
     try {
         const appointmentId = req.params.id;
         const {createdById, assignedToId, dateTime, details} = req.body;
@@ -56,7 +57,7 @@ router.put("/:id", async (req, res) => {
 
 // delete an appointment
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id",verifyToken, async (req, res) => {
     try{
         const appointmentId = req.params.id;
         const query = "DELETE FROM appointments WHERE id = ?";

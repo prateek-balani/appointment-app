@@ -22,19 +22,19 @@ router.get("/", async (req, res) => {
 // register a new user
 
 router.post("/register", async (req, res) => {
-  console.log("Register route hit...");  // 1
+  console.log("Register route hit...");  
   try {
-    console.log("req.body =", req.body);  // 2
+    console.log("req.body =", req.body); 
 
     const { fname, lname, email, pass, role } = req.body;
-    console.log(`fname=${fname}, lname=${lname}, pass=${pass}, role=${role}`); // 3
+    console.log(`fname=${fname}, lname=${lname}, pass=${pass}, role=${role}`); 
 
-    // 4
+    
     console.log("Hashing password...");
     const hashedPassword = await bcrypt.hash(pass, 10);
     console.log("Password hashed:", hashedPassword); 
 
-    // 5
+    
     console.log("Inserting user...");
     const query = "INSERT INTO user (firstName, lastName, email, password, role) VALUES (?, ?, ?, ?, ?)";
     const values = [fname, lname, email, hashedPassword, role];
@@ -70,7 +70,19 @@ router.post("/login", async (req, res) => {
               secret_key,
               { expiresIn: '1h' } // expires in 1 hr
             );
-            return res.json({ token });
+            return res.json({ 
+                success: true,
+                message: "Login successful",
+                token,
+                user: {
+                    id: user.id,
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    email: user.email,
+                    role: user.role
+                },
+                tokenType: "Bearer"
+            });
         } else {
             return res.status(401).json({ error: "Invalid credentials" });
         }

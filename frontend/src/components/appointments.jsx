@@ -5,18 +5,30 @@ const isProduction = process.env.NODE_ENV === "production";
 
 
 
+
+
 const Appointments = () => {
   const [appointments, setAppointments] = useState([]);
 
   useEffect(() => {
     const getAppointments = async () => {
       try {
-        fetch(isProduction ? "/api/appointments" : "http://localhost:5050/api/appointments")
-          .then((res) => res.json())
-          .then((data) => {
-            setAppointments(data);
+        const token = localStorage.getItem('token');
+        const response = await fetch(isProduction ? "/api/appointments" : "http://localhost:5050/api/appointments", {
+           headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`  // token here
+            },
           }
-          );
+        );
+       
+          if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      console.log(data);
+      setAppointments(data);
       } catch (e) {
         console.error(e.message);
       }
@@ -42,6 +54,7 @@ const Appointments = () => {
               <p className="text-base font-semibold text-center text-gray-900 dark:text-white">ID: {appt.id}</p>
               <p className="text-base font-semibold text-center text-gray-900 dark:text-white">Date/Time: {appt.dateTime}</p>
               <p className="text-base font-semibold text-center text-gray-900 dark:text-white">Details: {appt.details}</p>
+              <p> </p>
             </li>
           ))}
         </ul>
