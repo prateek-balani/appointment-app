@@ -54,7 +54,11 @@ const connectToDatabase = async () => {
         // Insert sample data into the appointments table
         await db.run(
             `INSERT INTO appointments (createdById, assignedToId, dateTime, details) VALUES (?, ?, ?, ?)`,
-            [2, 1, "2025-03-21 10:00:00", "Meeting with John Doe"]
+            [2, 1, "2025-03-20 10:00:00", "Meeting with John Doe"]
+        );
+        await db.run(
+            `INSERT INTO appointments (createdById, assignedToId, dateTime, details) VALUES (?, ?, ?, ?)`,
+            [1, 1, "2025-03-20 10:00:00", "Meeting with Jane Doe"]
         );
 
         console.log("Connected to SQLite database successfully at:", dbPath);

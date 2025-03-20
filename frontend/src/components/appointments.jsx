@@ -54,7 +54,6 @@ const Appointments = () => {
               <p className="text-base font-semibold text-center text-gray-900 dark:text-white">ID: {appt.id}</p>
               <p className="text-base font-semibold text-center text-gray-900 dark:text-white">Date/Time: {appt.dateTime}</p>
               <p className="text-base font-semibold text-center text-gray-900 dark:text-white">Details: {appt.details}</p>
-              <p> </p>
             </li>
           ))}
         </ul>

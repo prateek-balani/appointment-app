@@ -8,7 +8,7 @@ const verifyToken = require("../middleware/authentication.js");
 
 
 // list all records for the day
-router.get("/", verifyToken, async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const results = await req.db.all("SELECT * FROM appointments WHERE date(dateTime) = date('now')");
     res.status(200).send(results);
@@ -74,7 +74,7 @@ router.delete("/:id",verifyToken, async (req, res) => {
         const appointmentId = req.params.id;
         const query = "DELETE FROM appointments WHERE id = ?";
         const values = [appointmentId];
-        
+
         const { lastID } = await req.db.run(query, values);
         res.status(200).send(`appointment updated with id: ${lastID}`);
         }
