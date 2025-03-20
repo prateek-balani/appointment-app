@@ -31,6 +31,22 @@ router.get("/:id",verifyToken, async (req, res) => {
   }
 });
 
+// create a new appointment
+router.post("/",verifyToken, async (req, res) => {
+    try {
+        const {createdById, assignedToId, dateTime, details} = req.body;
+        const query = "INSERT INTO appointments (createdById, assignedToId, dateTime, details) VALUES (?, ?, ?, ?)";
+        const values = [createdById, assignedToId, dateTime, details];
+
+        const {lastID} = await req.db.run(query, values);
+        res.status(201).send(`appointment created with id: ${lastID}`);
+    } catch (e) {
+        console.error("error creating appointment:", e);
+        res.status(500).json({error: e.message});
+    }
+}
+);
+
 // update an appointment
 
 router.put("/:id",verifyToken, async (req, res) => {
