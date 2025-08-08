@@ -6,16 +6,20 @@ import Landing from "./pages/landing.jsx";
 import Login from "./pages/login.jsx";
 import Register from "./pages/register.jsx";
 import Appointments from "./pages/appointments.jsx";
+import Navbar from './components/navbar.jsx';
 
 const App = () => {
   return (
     <Router>
+      <>
+      <Navbar />
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/appointments" element={<Appointments />} />
       </Routes>
+      </>
     </Router>
   );
 };
