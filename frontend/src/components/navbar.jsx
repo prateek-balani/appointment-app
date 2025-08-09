@@ -1,6 +1,19 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
-const Navbar = () => {
+const Navbar = ({token,setToken}) => {
+    
+  
+    const navigate = useNavigate();
+
+    const HandleLogOut = () => {
+        
+
+        localStorage.removeItem("token");
+        setToken(null);
+        navigate("/login");
+    }
+
     return (
         <>
             <div className='navbar bg-gray-900 shadow-sm'>
@@ -20,18 +33,37 @@ const Navbar = () => {
 
                 </div>
                 <div className="navbar-center">
-                    <Link to='/' className="btn btn-ghost text-xl text-white">Appointment App</Link>
+                    {!token && (
+                        <Link to='/' className="btn btn-ghost text-xl text-white">Appointment App</Link>
+                    )}
+                    {token && (
+                        <Link to='/appointments' className="btn btn-ghost text-xl text-white">Appointment App</Link>
+                    )}
                 </div>
+
                 <div className="navbar-end">
-                    <div className='space-x-1'>
-                    <Link to="/login">
-                        <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Login</button>
-                    </Link>
-                    <Link to="/register">
-                        <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Register</button>
-                    </Link>
-                    </div>
+                    {!token && (
+                        <div className='space-x-1'>
+                            <Link to="/login">
+                                <button className="text-white btn btn-info">Login</button>
+                            </Link>
+                            <Link to="/register">
+                                <button className="text-white btn btn-info">Register</button>
+                            </Link>
+                        </div>
+                    )}
+                    {token && (
+                        <div className='space-x-1'>
+                            <Link to="/login">
+                                <button onClick={HandleLogOut} className="text-white btn btn-error">Logout</button>
+                            </Link>
+
+
+                        </div>
+                    )}
+
                 </div>
+
 
             </div>
         </>

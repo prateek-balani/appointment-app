@@ -4,10 +4,11 @@ import { useState } from "react";
 const isProduction = process.env.NODE_ENV === "production";
 
 
-const Login = () => {
+const Login = ({setToken}) => {
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+   
 
     const loginUser = async (e) => {
         e.preventDefault();
@@ -24,6 +25,7 @@ const Login = () => {
 
 
                 localStorage.setItem("token", user.token);
+                setToken(user.token);
 
                 console.log(user);
                 alert("User logged in successfully");
@@ -83,6 +85,7 @@ const Login = () => {
                                     placeholder="Password"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
+                                    required
                                    
                                 />
                             </label>

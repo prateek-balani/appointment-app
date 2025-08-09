@@ -1,7 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Landing from "./pages/landing.jsx";
 import Login from "./pages/login.jsx";
 import Register from "./pages/register.jsx";
@@ -9,15 +9,17 @@ import Appointments from "./pages/appointments.jsx";
 import Navbar from './components/navbar.jsx';
 
 const App = () => {
+  const [token, setToken] = useState(localStorage.getItem("token"));
+
   return (
     <Router>
       <>
-      <Navbar />
+      <Navbar token={token} setToken={setToken}/>
       <Routes>
-        <Route path="/" element={<Landing />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/appointments" element={<Appointments />} />
+        <Route path="/" element={token ? <Navigate to="/appointments" replace /> : <Landing />} />
+        <Route path="/login" element={token ? <Navigate to="/appointments" replace /> : <Login setToken={setToken}/>} />
+        <Route path="/register" element={token ? <Navigate to="/appointments" replace /> : <Register />} />
+        <Route path="/appointments" element={token ? <Appointments />:<Navigate to="/" replace />} />
       </Routes>
       </>
     </Router>
