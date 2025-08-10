@@ -3,7 +3,7 @@ require("dotenv").config();
 
 const secretKey = process.env.SECRET_KEY
 
-// Middleware to verify admin user based on JWT token
+// Middleware to verify  user based on JWT token
 const verifyToken = (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1]; // Extract token from header
 

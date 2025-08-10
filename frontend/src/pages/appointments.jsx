@@ -15,20 +15,20 @@ const Appointments = () => {
       try {
         const token = localStorage.getItem('token');
         const response = await fetch(isProduction ? "/api/appointments" : "http://localhost:5050/api/appointments", {
-           headers: {
-              "Content-Type": "application/json",
-              "Authorization": `Bearer ${token}`  // token here
-            },
-          }
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`  // token here
+          },
+        }
         );
-       
-          if (!response.ok) {
-        throw new Error(`Error: ${response.statusText}`);
-      }
 
-      const data = await response.json();
-      console.log(data);
-      setAppointments(data);
+        if (!response.ok) {
+          throw new Error(`Error: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        console.log(data);
+        setAppointments(data);
       } catch (e) {
         console.error(e.message);
       }

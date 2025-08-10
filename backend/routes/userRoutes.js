@@ -20,6 +20,21 @@ router.get("/", async (req, res) => {
   }
 });
 
+// list all staff
+router.get("/staff", async (req,res) =>{
+  const role = 'staff';
+  try{
+    const result = await req.db.all("SELECT * FROM user WHERE role = ?",[role]);
+    res.status(200).send(result);
+  
+
+  }
+  catch (err) {
+    console.error(err);
+    res.status(500).send("Error fetching staff");
+  }
+})
+
 // register a new user
 
 router.post("/register", async (req, res) => {

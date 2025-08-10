@@ -5,13 +5,48 @@ const db = require("../db/connection.js");
 const router = express.Router();
 const verifyToken = require("../middleware/authentication.js");
 
+//list all records
+router.get("/", async (req, res) => {
+  try {
+    const results = await req.db.all("SELECT * FROM appointments");
+    res.status(200).send(results);
+  } catch (e) {
+    console.error(e);
+    res.status(500).send("error fetching appointments for the day");
+  }
+});
+
 
 
 // list all records for the day
-router.get("/", async (req, res) => {
+router.get("/today", async (req, res) => {
   try {
     const results = await req.db.all("SELECT * FROM appointments WHERE date(dateTime) = date('now')");
     res.status(200).send(results);
+  } catch (e) {
+    console.error(e);
+    res.status(500).send("error fetching appointments for the day");
+  }
+});
+
+// list available appointments
+router.get("/appt", async (req, res) => {
+  const {date} = req.query ;
+
+  try {
+    const results = await req.db.all("SELECT * FROM appointments WHERE DATE(dateTime) = ?",[date]);
+
+    const hours = [
+      "9:00", "10:00","11:00","12:00","13:00", "14:00", "15:00", "16:00"
+    ];
+
+    const timeSlots = results.map(slots => slots.dateTime.slice(11,16));
+
+    const availableSlots = hours.filter(time => !timeSlots.includes(time));
+
+
+
+    res.status(200).send(availableSlots);
   } catch (e) {
     console.error(e);
     res.status(500).send("error fetching appointments for the day");
@@ -32,7 +67,7 @@ router.get("/:id",verifyToken, async (req, res) => {
 });
 
 // create a new appointment
-router.post("/",verifyToken, async (req, res) => {
+router.post("/", async (req, res) => {
     try {
         const {createdById, assignedToId, dateTime, details} = req.body;
         const query = "INSERT INTO appointments (createdById, assignedToId, dateTime, details) VALUES (?, ?, ?, ?)";
@@ -46,6 +81,7 @@ router.post("/",verifyToken, async (req, res) => {
     }
 }
 );
+
 
 // update an appointment
 
