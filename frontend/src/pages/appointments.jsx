@@ -1,5 +1,6 @@
 import React from "react";
 import { useEffect, useState } from "react";
+import { jwtDecode } from "jwt-decode";
 const isProduction = process.env.NODE_ENV === "production";
 
 
@@ -12,9 +13,17 @@ const Appointments = () => {
 
   useEffect(() => {
     const getAppointments = async () => {
+      const token = localStorage.getItem("token");
+      let userId = 0;
+      if (token) {
+        const decoded = jwtDecode(token);
+        userId = decoded.id;
+        console.log("userid", userId);
+
+      }
       try {
-        const token = localStorage.getItem('token');
-        const response = await fetch(isProduction ? "/api/appointments" : "http://localhost:5050/api/appointments", {
+       
+        const response = await fetch(isProduction ? `/api/appointments/${userId}` : `http://localhost:5050/api/appointments/${userId}`, {
           headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`  // token here

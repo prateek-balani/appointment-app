@@ -55,7 +55,7 @@ router.get("/appt", async (req, res) => {
 
 // get appointments by id
 
-router.get("/:id",verifyToken, async (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
      const appointmentId = req.params.id;
     const results = await req.db.all("SELECT * FROM appointments WHERE id = ?", appointmentId);
