@@ -13,7 +13,7 @@ const verifyToken = (req, res, next) => {
     // Verify token with secret key
     const decoded = jwt.verify(token, secretKey);
 
-    if (decoded.role !== "admin" || decoded.role !== "applicant" || decoded.role !== "staff") {
+    if (decoded.role !== "admin") {
       return res.status(403).json({ message: "error user login related" });
     }
 

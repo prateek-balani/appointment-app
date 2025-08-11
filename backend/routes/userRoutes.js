@@ -35,6 +35,23 @@ router.get("/staff", async (req,res) =>{
   }
 })
 
+// list info based on user id
+// list all staff
+router.get("/:id", async (req,res) =>{
+  const userId = req.params.id;
+  
+  try{
+    const result = await req.db.all("SELECT * FROM user WHERE id = ?",[userId]);
+    res.status(200).send(result);
+  
+
+  }
+  catch (err) {
+    console.error(err);
+    res.status(500).send("Error fetching staff");
+  }
+})
+
 // register a new user
 
 router.post("/register", async (req, res) => {

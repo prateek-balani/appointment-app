@@ -8,6 +8,7 @@ import Register from "./pages/register.jsx";
 import Appointments from "./pages/appointments.jsx";
 import Navbar from './components/navbar.jsx';
 import BookAppointmets from './pages/bookAppointments.jsx';
+import AccountInfo from './pages/accountInfo.jsx';
 
 const App = () => {
   const [token, setToken] = useState(localStorage.getItem("token"));
@@ -22,6 +23,7 @@ const App = () => {
         <Route path="/register" element={token ? <Navigate to="/appointments" replace /> : <Register />} />
         <Route path="/appointments" element={token ? <Appointments />:<Navigate to="/" replace />} />
         <Route path="/booking" element={token ? <BookAppointmets />:<Navigate to="/" replace />} />
+        <Route path="/account" element={token ? <AccountInfo />:<Navigate to="/" replace />} />
       </Routes>
       </>
     </Router>
