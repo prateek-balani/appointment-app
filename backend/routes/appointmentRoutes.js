@@ -31,10 +31,10 @@ router.get("/today", async (req, res) => {
 
 // list available appointments
 router.get("/appt", async (req, res) => {
-  const { date } = req.query;
+  const { date,staffId } = req.query;
 
   try {
-    const results = await req.db.all("SELECT * FROM appointments WHERE DATE(dateTime) = ?", [date]);
+    const results = await req.db.all("SELECT * FROM appointments WHERE DATE(dateTime) = ? AND assignedToId = ?", [date,staffId]);
 
     const hours = [
       "9:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00"
@@ -53,12 +53,12 @@ router.get("/appt", async (req, res) => {
   }
 });
 
-// get appointments by id
+// get appointments by user id
 
 router.get("/:id", async (req, res) => {
   try {
-    const appointmentId = req.params.id;
-    const results = await req.db.all("SELECT * FROM appointments WHERE id = ?", appointmentId);
+    const userId = req.params.id;
+    const results = await req.db.all("SELECT * FROM appointments WHERE createdById = ?", userId);
     res.status(200).send(results);
   } catch (e) {
     console.error(e);
@@ -85,7 +85,7 @@ router.post("/", async (req, res) => {
 
 // update an appointment
 
-router.put("/:id", verifyToken, async (req, res) => {
+router.put("/:id", async (req, res) => {
   try {
     const appointmentId = req.params.id;
     const { createdById, assignedToId, dateTime, details } = req.body;

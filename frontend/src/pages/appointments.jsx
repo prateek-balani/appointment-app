@@ -83,22 +83,36 @@ const Appointments = () => {
     <section className="flex items-center justify-center h-screen bg-gray-700">
       <div className="w-full max-w-md p-8 space-y-5 bg-black rounded-lg shadow-lg dark:bg-gray-800">
         <h1 className="text-2xl font-semibold text-center text-gray-900 dark:text-white">Appointments</h1>
+        <table className="w-full text-center text-gray-900 dark:text-white">
+          <thead>
+            <tr>
+              <th className="text-base font-semibold text-center text-gray-900 dark:text-white">ID:</th>
+              <th className="text-base font-semibold text-center text-gray-900 dark:text-white">Date/Time:</th>
+              <th className="text-base font-semibold text-center text-gray-900 dark:text-white">Details:</th>
 
-        {appointments.map((appt) => (
-          <ul>
-            <li key={appt.id}>
-              <p className="text-base font-semibold text-center text-gray-900 dark:text-white">ID: {appt.id}</p>
-              <p className="text-base font-semibold text-center text-gray-900 dark:text-white">Date/Time: {appt.dateTime}</p>
-              <p className="text-base font-semibold text-center text-gray-900 dark:text-white">Details: {appt.details}</p>
-            </li>
-            <button
-              onClick={() => deleteAppointment(appt.id)}
-              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            >
-              Cancel Appointment
-            </button>
-          </ul>
-        ))}
+            </tr>
+          </thead>
+          <tbody>
+            {appointments.map((appt) => (
+
+
+              <tr key={appt.id} className="border-t border-gray-300 dark:border-gray-700">
+                <td className="px-4 py-2"> {appt.id}</td>
+                <td className="px-4 py-2"> {appt.dateTime}</td>
+                <td className="px-4 py-2">{appt.details}</td>
+                <td className="px-4 py-2"><button
+                  onClick={() => deleteAppointment(appt.id)}
+                  className="btn btn-info"
+                >
+                  Cancel Appointment
+                </button></td>
+              </tr>
+
+
+
+            ))}
+          </tbody>
+        </table>
 
       </div>
     </section>

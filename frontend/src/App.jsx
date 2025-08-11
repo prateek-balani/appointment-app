@@ -10,6 +10,7 @@ import Navbar from './components/navbar.jsx';
 import BookAppointmets from './pages/bookAppointments.jsx';
 import AccountInfo from './pages/accountInfo.jsx';
 import AdminAccount from './pages/adminAccount.jsx';
+import Footer from './components/footer.jsx';
 import { jwtDecode } from "jwt-decode";
 
 const App = () => {
@@ -63,6 +64,8 @@ const App = () => {
 
 
         </Routes>
+        <Footer />
+
       </>
     </Router>
   );

@@ -24,7 +24,7 @@ const AccountInfo = () => {
 
     const editUser = async (e) => {
         e.preventDefault();
-       
+
         try {
             const response = await fetch(isProduction ? `/api/users/${userId}` : `http://localhost:5050/api/users/${userId}`, {
                 method: "PUT",
@@ -39,7 +39,8 @@ const AccountInfo = () => {
             }
             else {
                 alert("data updated succesfully");
-                navigate("/appointments");
+                window.location.reload();
+                navigate("/account");
             }
 
 
@@ -86,39 +87,45 @@ const AccountInfo = () => {
                 <h1 className="text-2xl font-semibold text-center text-gray-900 dark:text-white">Account info</h1>
                 {!isEditing ? (
                     <div className="info-part">
-                        <ul>
-                            {userInfo.map((user) => (
-                                <li key={user.id}>
-                                    <p className="text-base font-semibold text-center text-gray-900 dark:text-white">First Name: {user.firstName}</p>
-                                    <p className="text-base font-semibold text-center text-gray-900 dark:text-white">Last Name: {user.lastName}</p>
-                                    <p className="text-base font-semibold text-center text-gray-900 dark:text-white">Email: {user.email}</p>
-                                    <p className="text-base font-semibold text-center text-gray-900 dark:text-white">Role: {user.role}</p>
-                                </li>
-                            ))}
-                        </ul>
+                        <table className="w-full text-center text-gray-900 dark:text-white">
+                            <thead>
+                                <tr>
+                                    <th className="text-base font-semibold text-center text-gray-900 dark:text-white">First Name:</th>
+                                    <th className="text-base font-semibold text-center text-gray-900 dark:text-white">Last Name:</th>
+                                    <th className="text-base font-semibold text-center text-gray-900 dark:text-white">Email:</th>
+                                    <th className="text-base font-semibold text-center text-gray-900 dark:text-white">Role:</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {userInfo.map((user) => (
+                                    <tr key={user.id} className="border-t border-gray-300 dark:border-gray-700">
+                                        <td className="px-4 py-2">{user.firstName}</td>
+                                        <td className="px-4 py-2">{user.lastName}</td>
+                                        <td className="px-4 py-2">{user.email}</td>
+                                        <td className="px-4 py-2">{user.role}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
                         <button className="btn btn-info" onClick={() => { setFname(userInfo.firstName); setLname(userInfo.lastName); setEmails(userInfo.email); setIsEditing(true); }}>Edit</button>
                     </div>
                 ) : (
                     <div className="edit-part">
                         {userInfo.map((user) => (
-                            <form onSubmit={editUser}>
+                            <form onSubmit={editUser} className="flex flex-col space-y-2">
                                 <label htmlFor="firstName" className="text-base font-semibold text-center text-gray-900 dark:text-white">First Name: </label> <input type="text" className="input" placeholder={user.firstName} value={fname} onChange={(e) => setFname(e.target.value)} />
                                 <label htmlFor="lastName" className="text-base font-semibold text-center text-gray-900 dark:text-white">Last Name: </label><input type="text" className="input" placeholder={user.lastName} value={lname} onChange={(e) => setLname(e.target.value)} />
                                 <label htmlFor="email" className="text-base font-semibold text-center text-gray-900 dark:text-white">Email: </label><input type="text" className="input" placeholder={user.email} value={emails} onChange={(e) => setEmails(e.target.value)} />
 
 
-                                <button type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
+                                <button type="submit" className="btn btn-info">Submit</button>
 
 
 
                             </form>
                         ))}
-                        <button
-                            className="btn btn-secondary mt-3"
-                            onClick={() => setIsEditing(false)}
-                        >
-                            Cancel
-                        </button>
+                        <button className="btn btn-error" onClick={() => setIsEditing(false)}>Cancel</button>
 
 
                     </div>

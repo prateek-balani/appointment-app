@@ -1,18 +1,56 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
 
-const Navbar = ({token,setToken}) => {
-    
-  
+import { useEffect, useState } from 'react';
+import { jwtDecode } from "jwt-decode";
+
+
+const Navbar = ({ token, setToken }) => {
+    const [role, setRole] = useState(null);
+
+
+
+
     const navigate = useNavigate();
 
     const HandleLogOut = () => {
-        
+
 
         localStorage.removeItem("token");
         setToken(null);
         navigate("/login");
     }
+    const [loading, setLoading] = useState(true);
+
+
+
+    useEffect(() => {
+        setLoading(true);
+        let roles = "";
+        if (token) {
+            try {
+                const decoded = jwtDecode(token);
+                roles = decoded.role;
+                console.log("role:", roles);
+
+
+                setRole(roles);
+
+
+            } catch (e) {
+                setRole(null);
+                console.error("Invalid token", e);
+            }
+        } else {
+
+            console.log("unable to get token")
+        }
+        setLoading(false);
+    }, [token]);
+
+    if (loading) {
+        return <div>Loading application...</div>;
+    }
+
 
     return (
         <>
@@ -25,9 +63,11 @@ const Navbar = ({token,setToken}) => {
                         <ul
                             tabIndex={0}
                             className="menu menu-sm dropdown-content bg-white rounded-box z-1 mt-3 w-52 p-2 shadow">
-                            <li><a>Homepage</a></li>
-                            <li><a>Portfolio</a></li>
-                            <li><a>About</a></li>
+                            <li><Link to='/' className='text-black'>View Appointments</Link></li>
+                            <li><Link to='/booking' className='text-black'>Book an appointment</Link></li>
+                            <li><Link to='/account' className='text-black'>Account Info</Link></li>
+                            {role === "admin" ? <li><Link to='/adminac' className='text-black'>Admin Account Access</Link></li> : null}
+
                         </ul>
                     </div>
 
