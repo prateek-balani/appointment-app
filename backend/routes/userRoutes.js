@@ -21,12 +21,12 @@ router.get("/", async (req, res) => {
 });
 
 // list all staff
-router.get("/staff", async (req,res) =>{
+router.get("/staff", async (req, res) => {
   const role = 'staff';
-  try{
-    const result = await req.db.all("SELECT * FROM user WHERE role = ?",[role]);
+  try {
+    const result = await req.db.all("SELECT * FROM user WHERE role = ?", [role]);
     res.status(200).send(result);
-  
+
 
   }
   catch (err) {
@@ -37,13 +37,13 @@ router.get("/staff", async (req,res) =>{
 
 // list info based on user id
 // list all staff
-router.get("/:id", async (req,res) =>{
+router.get("/:id", async (req, res) => {
   const userId = req.params.id;
-  
-  try{
-    const result = await req.db.all("SELECT * FROM user WHERE id = ?",[userId]);
+
+  try {
+    const result = await req.db.all("SELECT * FROM user WHERE id = ?", [userId]);
     res.status(200).send(result);
-  
+
 
   }
   catch (err) {
@@ -55,19 +55,19 @@ router.get("/:id", async (req,res) =>{
 // register a new user
 
 router.post("/register", async (req, res) => {
-  console.log("Register route hit...");  
+  console.log("Register route hit...");
   try {
-    console.log("req.body =", req.body); 
+    console.log("req.body =", req.body);
 
     const { fname, lname, email, pass, role } = req.body;
-    console.log(`fname=${fname}, lname=${lname}, pass=${pass}, role=${role}`); 
+    console.log(`fname=${fname}, lname=${lname}, pass=${pass}, role=${role}`);
 
-    
+
     console.log("Hashing password...");
     const hashedPassword = await bcrypt.hash(pass, 10);
-    console.log("Password hashed:", hashedPassword); 
+    console.log("Password hashed:", hashedPassword);
 
-    
+
     console.log("Inserting user...");
     const query = "INSERT INTO user (firstName, lastName, email, password, role) VALUES (?, ?, ?, ?, ?)";
     const values = [fname, lname, email, hashedPassword, role];
@@ -90,55 +90,82 @@ router.post("/register", async (req, res) => {
 // login a user
 
 router.post("/login", async (req, res) => {
-    const { email, password } = req.body;
-    try {
-        const user = await req.db.get("SELECT * FROM user WHERE email = ?", [email]);
-        if (!user) {
-            return res.status(401).json({ error: "Invalid credentials" });
-        }
-        const pmatch = await bcrypt.compare(password, user.password);
-        if (pmatch) {
-            const token = jwt.sign(
-              { id: user.id, role: user.role },
-              secret_key,
-              { expiresIn: '1h' } // expires in 1 hr
-            );
-            return res.json({ 
-                success: true,
-                message: "Login successful",
-                token,
-                user: {
-                    id: user.id,
-                    firstName: user.firstName,
-                    lastName: user.lastName,
-                    email: user.email,
-                    role: user.role
-                },
-                tokenType: "Bearer"
-            });
-        } else {
-            return res.status(401).json({ error: "Invalid credentials" });
-        }
-    } catch (err) {
-        console.error("Error logging in user:", err);
-        return res.status(401).json({ error: err.message });
+  const { email, password } = req.body;
+  try {
+    const user = await req.db.get("SELECT * FROM user WHERE email = ?", [email]);
+    if (!user) {
+      return res.status(401).json({ error: "Invalid credentials" });
     }
+    const pmatch = await bcrypt.compare(password, user.password);
+    if (pmatch) {
+      const token = jwt.sign(
+        { id: user.id, role: user.role },
+        secret_key,
+        { expiresIn: '1h' } // expires in 1 hr
+      );
+      return res.json({
+        success: true,
+        message: "Login successful",
+        token,
+        user: {
+          id: user.id,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+          role: user.role
+        },
+        tokenType: "Bearer"
+      });
+    } else {
+      return res.status(401).json({ error: "Invalid credentials" });
+    }
+  } catch (err) {
+    console.error("Error logging in user:", err);
+    return res.status(401).json({ error: err.message });
+  }
 });
 
 // updating a role for a user
-router.put("/:id", verifyToken, async (req, res) => {
-    try {
-        const userId = req.params.id;
-        const { role } = req.body;
-        const query = "UPDATE user SET role = ? WHERE id = ?";
-        const values = [role, userId];
+router.put("/role/:id", async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const { role } = req.body;
+    const query = "UPDATE user SET role = ? WHERE id = ?";
+    const values = [role, userId];
 
-        await req.db.run(query, values);
-        res.status(200).send("User role updated");
-    } catch (e) {
-        console.error("Error updating user role:", e);
-        res.status(500).json({ error: e.message });
+    await req.db.run(query, values);
+    res.status(200).send("User role updated");
+  } catch (e) {
+    console.error("Error updating user role:", e);
+    res.status(500).json({ error: e.message });
+  }
+}
+);
+
+//route to edit info
+router.put("/:id", async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const userInfo = await req.db.get("SELECT * FROM user WHERE id = ?", [userId]);
+    if (!userInfo) {
+      return res.status(404).send("User not found");
     }
+
+    const updatedInfo = {
+      firstName: !req.body.firstName || req.body.firstName.trim() === "" ? userInfo.firstName : req.body.firstName.trim(),
+      lastName: !req.body.lastName || req.body.lastName.trim() === "" ? userInfo.lastName : req.body.lastName.trim(),
+      email: !req.body.email || req.body.email.trim() === "" ? userInfo.email : req.body.email.trim(),
+    }
+    const { firstName, lastName, email } = req.body;
+    const query = "UPDATE user SET firstName = ?, lastName = ?, email = ? WHERE id = ?";
+    const values = [updatedInfo.firstName, updatedInfo.lastName, updatedInfo.email, userId];
+
+    await req.db.run(query, values);
+    res.status(200).send("User role updated");
+  } catch (e) {
+    console.error("Error updating user role:", e);
+    res.status(500).json({ error: e.message });
+  }
 }
 );
 
