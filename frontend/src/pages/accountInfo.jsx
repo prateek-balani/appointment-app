@@ -24,14 +24,7 @@ const AccountInfo = () => {
 
     const editUser = async (e) => {
         e.preventDefault();
-        const token = localStorage.getItem("token");
-        let userId = 0;
-        if (token) {
-            const decoded = jwtDecode(token);
-            userId = decoded.id;
-            console.log("userid", userId);
-
-        }
+       
         try {
             const response = await fetch(isProduction ? `/api/users/${userId}` : `http://localhost:5050/api/users/${userId}`, {
                 method: "PUT",

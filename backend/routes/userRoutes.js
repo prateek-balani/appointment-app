@@ -132,6 +132,8 @@ router.put("/role/:id", async (req, res) => {
     const { role } = req.body;
     const query = "UPDATE user SET role = ? WHERE id = ?";
     const values = [role, userId];
+    console.log("role",role);
+    console.log("userid",userId)
 
     await req.db.run(query, values);
     res.status(200).send("User role updated");
